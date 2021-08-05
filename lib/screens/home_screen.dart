@@ -8,7 +8,6 @@ import 'package:practicle_interview/screens/atrribute_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routes = "home_screen";
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -216,201 +215,205 @@ class _HomeScreenState extends State<HomeScreen> {
   getProductForm() {
     List<String> attributesName = [];
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Product Form"),
-            content: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            keyboardType: TextInputType.name,
-                            textInputAction: TextInputAction.next,
-                            controller: _typeController,
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return "Please Enter Product Product Type First....";
-                              }
-                              return null;
-                            },
-                            onSaved: (val) {
-                              setState(() {
-                                type = val!;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "Type",
-                              hintText: "Enter Product Type",
-                            ),
-                          ),
-                          SizedBox(height: 15),
-                          TextFormField(
-                            keyboardType: TextInputType.name,
-                            textInputAction: TextInputAction.next,
-                            controller: _nameController,
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return "Please Enter Product Name First....";
-                              }
-                              return null;
-                            },
-                            onSaved: (val) {
-                              setState(() {
-                                name = val!;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "Name",
-                              hintText: "Enter Product Name",
-                            ),
-                          ),
-                          SizedBox(height: 15),
-                          TextFormField(
-                            controller: _colorController,
-                            keyboardType: TextInputType.name,
-                            textInputAction: TextInputAction.next,
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return "Please Enter Product's Color First....";
-                              }
-                              return null;
-                            },
-                            onSaved: (val) {
-                              setState(() {
-                                color = val!;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "Color",
-                              hintText: "Enter Product Color",
-                            ),
-                          ),
-                          SizedBox(height: 15),
-                          TextFormField(
-                            controller: _stockController,
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.next,
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return "Please Enter Product Quantity First....";
-                              }
-                              return null;
-                            },
-                            onSaved: (val) {
-                              setState(() {
-                                stock = int.parse(val!);
-                              });
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "Stock",
-                              hintText: "Enter Product Quantity",
-                            ),
-                          ),
-                          SizedBox(height: 15),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      "Attributes",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: as!.data.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                TextFormField(
-                                  controller: TextEditingController.fromValue(
-                                      TextEditingValue.empty),
-                                  keyboardType: TextInputType.number,
-                                  textInputAction: TextInputAction.next,
-                                  validator: (val) {
-                                    if (val!.isEmpty) {
-                                      return "Please Enter Product Quantity First....";
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (val) {
-                                    setState(() {
-                                      attributesName.add(val!);
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText:
-                                        "${as!.data[index]["attribute"]}",
-                                    hintText:
-                                        "Enter Product ${as!.data[index]["attribute"]}",
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-                              ],
-                            );
-                          }),
-                    ),
-                    SizedBox(height: 15),
-                    Wrap(
-                      alignment: WrapAlignment.end,
-                      crossAxisAlignment: WrapCrossAlignment.end,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Product Form"),
+          content: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Column(
                       children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("Cancel"),
-                        ),
-                        SizedBox(width: 15),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              dbh.addData(
-                                products: Products(
-                                  name: name,
-                                  color: color,
-                                  selected: 0,
-                                  stock: stock,
-                                  type: type,
-                                ),
-                              );
-                              setState(() {
-                                fetchProducts = dbh.getAllData();
-                              });
-                              _colorController.clear();
-                              _stockController.clear();
-                              _nameController.clear();
-                              Navigator.of(context).pop();
-                              Timer(Duration(seconds: 3), () {});
+                        TextFormField(
+                          keyboardType: TextInputType.name,
+                          textInputAction: TextInputAction.next,
+                          controller: _typeController,
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Please Enter Product Product Type First....";
                             }
+                            return null;
                           },
-                          child: Text("Submit"),
+                          onSaved: (val) {
+                            setState(() {
+                              type = val!;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Type",
+                            hintText: "Enter Product Type",
+                          ),
                         ),
+                        SizedBox(height: 15),
+                        TextFormField(
+                          keyboardType: TextInputType.name,
+                          textInputAction: TextInputAction.next,
+                          controller: _nameController,
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Please Enter Product Name First....";
+                            }
+                            return null;
+                          },
+                          onSaved: (val) {
+                            setState(() {
+                              name = val!;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Name",
+                            hintText: "Enter Product Name",
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        TextFormField(
+                          controller: _colorController,
+                          keyboardType: TextInputType.name,
+                          textInputAction: TextInputAction.next,
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Please Enter Product's Color First....";
+                            }
+                            return null;
+                          },
+                          onSaved: (val) {
+                            setState(() {
+                              color = val!;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Color",
+                            hintText: "Enter Product Color",
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        TextFormField(
+                          controller: _stockController,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Please Enter Product Quantity First....";
+                            }
+                            return null;
+                          },
+                          onSaved: (val) {
+                            setState(() {
+                              stock = int.parse(val!);
+                            });
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Stock",
+                            hintText: "Enter Product Quantity",
+                          ),
+                        ),
+                        SizedBox(height: 15),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  Text(
+                    "Attributes",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  (as!.data.length == 0)
+                      ? Text("No Attributes")
+                      : SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: as!.data.length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: [
+                                    TextFormField(
+                                      controller:
+                                          TextEditingController.fromValue(
+                                              TextEditingValue.empty),
+                                      keyboardType: TextInputType.number,
+                                      textInputAction: TextInputAction.next,
+                                      validator: (val) {
+                                        if (val!.isEmpty) {
+                                          return "Please Enter Product Quantity First....";
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (val) {
+                                        setState(() {
+                                          attributesName.add(val!);
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText:
+                                            "${as!.data[index]["attribute"]}",
+                                        hintText:
+                                            "Enter Product ${as!.data[index]["attribute"]}",
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                  ],
+                                );
+                              }),
+                        ),
+                  SizedBox(height: 15),
+                  Wrap(
+                    alignment: WrapAlignment.end,
+                    crossAxisAlignment: WrapCrossAlignment.end,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Cancel"),
+                      ),
+                      SizedBox(width: 15),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            dbh.addData(
+                              products: Products(
+                                name: name,
+                                color: color,
+                                selected: 0,
+                                stock: stock,
+                                type: type,
+                              ),
+                            );
+                            setState(() {
+                              fetchProducts = dbh.getAllData();
+                            });
+                            _colorController.clear();
+                            _stockController.clear();
+                            _nameController.clear();
+                            _typeController.clear();
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text("Submit"),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }
