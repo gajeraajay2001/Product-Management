@@ -40,15 +40,46 @@ class _AttributeScreenState extends State<AttributeScreen> {
               child: CircularProgressIndicator(),
             );
           }
-          return ListView.builder(
-              itemCount: snapshotAttributes.data.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(20),
-                  child: Text("${snapshotAttributes.data[index]["attribute"]}"),
-                );
-              });
+          return (snapshotAttributes.data.length == 0)
+              ? Center(
+                  child: Text(
+                    "No Attributes is there ... ",
+                    style: TextStyle(fontSize: 30),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: snapshotAttributes.data.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.only(left: 40, top: 20, right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "${snapshotAttributes.data[index]["attribute"]}",
+                            style:
+                                TextStyle(color: Colors.purple, fontSize: 30),
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              attributeHelper.deleteAttributes(
+                                  id: snapshotAttributes.data[index]["id"]);
+                              setState(() {
+                                fetchAllAttributes =
+                                    attributeHelper.getAllData();
+                              });
+                            },
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                              size: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  });
         },
       ),
       floatingActionButton: FloatingActionButton(

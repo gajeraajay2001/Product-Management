@@ -45,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
       ),
+      backgroundColor: Colors.grey.shade200.withOpacity(1),
       body: FutureBuilder(
         future: fetchProducts,
         builder: (context, AsyncSnapshot snapProducts) {
@@ -72,58 +73,93 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: CircularProgressIndicator(),
                   );
                 }
-                return ListView.builder(
-                  itemCount: snapProducts.data!.length,
-                  itemBuilder: (context, index) {
-                    newProductId = snapProducts.data!.length;
-                    return Card(
-                      margin:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                "https://png.pngtree.com/thumb_back/fw800/back_our/20190622/ourmid/pngtree-purple-ray-light-strip-minimalist-banner-background-image_210030.jpg"),
-                            fit: BoxFit.fill,
-                          ),
+                return (snapProducts.data.length == 0)
+                    ? Center(
+                        child: Text(
+                          "No Products is there....",
+                          style: TextStyle(fontSize: 25),
                         ),
-                        child: Wrap(
-                          direction: Axis.vertical,
-                          alignment: WrapAlignment.center,
-                          spacing: 20,
-                          children: [
-                            Text(
-                              "Product Type := ${snapProducts.data[index].type}",
-                              style:
-                                  TextStyle(fontSize: 25, color: Colors.white),
+                      )
+                    : ListView.builder(
+                        itemCount: snapProducts.data!.length,
+                        itemBuilder: (context, index) {
+                          newProductId = snapProducts.data!.length;
+                          return Card(
+                            margin: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 15),
+                            elevation: 10,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      "https://png.pngtree.com/thumb_back/fw800/back_our/20190622/ourmid/pngtree-purple-ray-light-strip-minimalist-banner-background-image_210030.jpg"),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: IconButton(
+                                      onPressed: () async {
+                                        dbh.deleteProduct(
+                                            id: snapProducts.data[index].id);
+                                        setState(() {
+                                          fetchProducts = dbh.getAllData();
+                                        });
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                        size: 28,
+                                      ),
+                                    ),
+                                  ),
+                                  Wrap(
+                                    direction: Axis.vertical,
+                                    alignment: WrapAlignment.center,
+                                    spacing: 20,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Product Type := ${snapProducts.data[index].type}",
+                                            style: TextStyle(
+                                                fontSize: 25,
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        "Product Name := ${snapProducts.data[index].name}",
+                                        style: TextStyle(
+                                            fontSize: 25, color: Colors.white),
+                                      ),
+                                      Text(
+                                        "Product Color := ${snapProducts.data[index].color}",
+                                        style: TextStyle(
+                                            fontSize: 25, color: Colors.white),
+                                      ),
+                                      Text(
+                                        "Product Stock := ${snapProducts.data[index].stock}",
+                                        style: TextStyle(
+                                            fontSize: 25, color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                            Text(
-                              "Product Name := ${snapProducts.data[index].name}",
-                              style:
-                                  TextStyle(fontSize: 25, color: Colors.white),
-                            ),
-                            Text(
-                              "Product Color := ${snapProducts.data[index].color}",
-                              style:
-                                  TextStyle(fontSize: 25, color: Colors.white),
-                            ),
-                            Text(
-                              "Product Stock := ${snapProducts.data[index].stock}",
-                              style:
-                                  TextStyle(fontSize: 25, color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
+                          );
+                        },
+                      );
               });
         },
       ),
@@ -140,7 +176,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       return AttributeScreen();
                     },
                   ),
-                );
+                ).then((value) {
+                  setState(() {
+                    fetchProducts = dbh.getAllData();
+                    fetchAllAttributes = attributeHelper.getAllData();
+                  });
+                });
               },
               child: Center(
                   child: Text(
@@ -342,7 +383,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
-
                               dbh.addData(
                                 products: Products(
                                   name: name,
